@@ -17,11 +17,12 @@ builder.Services.AddDbContext<CatchMeUpDbContext>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-var app = builder.Build();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme =  JwtBearerDefaults.AuthenticationScheme;
 }).AddAzureAdBearer(options => builder.Configuration.Bind("AzureAd", options));
+var app = builder.Build();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
