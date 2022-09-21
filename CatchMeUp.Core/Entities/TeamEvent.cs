@@ -7,4 +7,6 @@ public class TeamEvent : BaseEntity
     public string Description { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
+    public int TeamId { get; set; }
+    public virtual Team Team { get; set; }
 }

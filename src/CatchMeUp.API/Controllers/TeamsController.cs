@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CatchMeUp.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/teams")]
 [ApiController]
 public class TeamsController : ControllerBase
 {
@@ -34,7 +34,7 @@ public class TeamsController : ControllerBase
     [Route("teamevents/{teamId:int}")]
     public async Task<IActionResult> GetTeamEvents(int teamId)
     {
-        var teamEvents = await _unitOfWork.TeamRepository.Get(x => x.Id == teamId, includeProperties: "TeamEvents");
+        var teamEvents = await _unitOfWork.TeamEventRepository.Get(x => x.TeamId == teamId);
         var teamEventDtos = _mapper.Map<List<TeamEventDto>>(teamEvents);
         return Ok(teamEventDtos);
     }
