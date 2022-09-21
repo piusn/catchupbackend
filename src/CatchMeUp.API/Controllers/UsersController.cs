@@ -65,8 +65,39 @@ public class UsersController : ControllerBase
     [Route("unfavourite")]
     public async Task<IActionResult> UnFavourite([FromBody] FavouriteDto favouriteDto)
     {
+        var favourite = await _unitOfWork.FavouriteRepository.GetFavouriteByUserIds(favouriteDto.UserId, favouriteDto.MemberId);
+        if (favourite != null)
+        {
+            await _unitOfWork.FavouriteRepository.Delete(favourite);
+            await _unitOfWork.Save();
+        }
         return Ok();
     }
+
+
+    [HttpPost]
+    [Route("favourite")]
+    public async Task<IActionResult> Favourite(FavouriteDto favouriteDto)
+    {
+        var favourite = _mapper.Map<Favourite>(favouriteDto);
+        await _unitOfWork.FavouriteRepository.Insert(favourite);
+        await _unitOfWork.Save();
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("favourites/{userId?}")]
+    public async Task<List<MemberDto>> GetFavourites(int userId)
+    {
+        var favourites = await _unitOfWork.FavouriteRepository.Get(x => x.UserId == userId);
+        var ids = favourites.Select(x => x.MemberId).ToList();
+        var members = await _unitOfWork.MemberRepository.Get(x => ids.Contains(x.Id));
+        return _mapper.Map<List<MemberDto>>(members);
+    }
+
+    //getfavourites
+    //create event
+    //list events
 
     [HttpGet]
     [Route("interests/{userId:int}")]
@@ -83,4 +114,5 @@ public class UsersController : ControllerBase
         });
         return Ok(userInterests);
     }
+
 }
