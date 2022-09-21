@@ -38,6 +38,7 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> SetAvailability(AvailabilityDto availabilityDto)
     {
         var user = await _unitOfWork.MemberRepository.GetByID(availabilityDto.UserId);
+
         if (user == null)
             return NotFound($"The user with id {availabilityDto.UserId} is not found");
 
@@ -49,9 +50,8 @@ public class UsersController : ControllerBase
             MemberInterests = new List<MemberInterest>()
             {
                 new MemberInterest() {
-                    Id = availabilityDto.ActivityId,
+                    InterestId = availabilityDto.ActivityId,
                     MemberId = availabilityDto.UserId
-
                 }
             }
         });
@@ -68,9 +68,19 @@ public class UsersController : ControllerBase
         return Ok();
     }
 
+    [HttpGet]
+    [Route("interests/{userId:int}")]
     public async Task<IActionResult> GetInterests(int userId)
     {
-        return Ok();
-    }
+        var user = await _unitOfWork.MemberInterestRepository
+            .Get(x => x.MemberId == userId, includeProperties: "Interest,Member");
 
+        var userInterests = user.Select(x => new
+        {
+            Name = x.Interest.Name,
+            Id = x.Interest.Id,
+            UserId = x.MemberId
+        });
+        return Ok(userInterests);
+    }
 }
