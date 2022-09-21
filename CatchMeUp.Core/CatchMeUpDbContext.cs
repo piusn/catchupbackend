@@ -18,9 +18,13 @@ namespace CatchMeUp.Core
             optionsBuilder.UseSqlServer(_configuration.GetConnectionString("CatchMeUpConnectionString"));
         }
 
-        public DbSet<Member> Members { get; set; }
+        public DbSet<User> Members { get; set; }
         public DbSet<Following> Followers { get; set; }
         public DbSet<Interest> Interests { get; set; }
         public DbSet<Favourite> Favourites { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamEvent> TeamEvents { get; set; }
+        public DbSet<MemberInterest> MemberInterests { get; set; }
+        public DbSet<Availability> MemberAvailability { get; set; }
     }
 }

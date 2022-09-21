@@ -22,26 +22,48 @@ public class UsersController : ControllerBase
     [Route("follow")]
     public async Task<IActionResult> Follow(FollowDto followDto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var follow = _mapper.Map<Following>(followDto);
         await _unitOfWork.FollowingsRepository.Insert(follow);
         await _unitOfWork.Save();
-        return Ok();
+
+        followDto = _mapper.Map<FollowDto>(follow);
+        return Ok(followDto);
     }
 
     [HttpPost]
     [Route("setavailability")]
     public async Task<IActionResult> SetAvailability(AvailabilityDto availabilityDto)
     {
-        var user = _unitOfWork.MemberRepository.GetByID(availabilityDto.UserId);
+        var user = await _unitOfWork.MemberRepository.GetByID(availabilityDto.UserId);
 
-        user.Available = true;
+        if (user == null)
+            return NotFound($"The user with id {availabilityDto.UserId} is not found");
+
+        user.Available = availabilityDto.AvailabilityStatus == "true";
+        await _unitOfWork.AvailabilityRepository.Insert(new Availability()
+        {
+            StartTime = availabilityDto.StartTime,
+            EndTime = availabilityDto.EndTime,
+            MemberInterests = new List<MemberInterest>()
+            {
+                new MemberInterest() {
+                    InterestId = availabilityDto.ActivityId,
+                    MemberId = availabilityDto.UserId
+                }
+            }
+        });
+
         await _unitOfWork.Save();
+
         return Ok();
     }
 
     [HttpPost]
     [Route("unfavourite")]
-    public async Task<IActionResult> UnFavourite(FavouriteDto favouriteDto)
+    public async Task<IActionResult> UnFavourite([FromBody] FavouriteDto favouriteDto)
     {
         var favourite = await _unitOfWork.FavouriteRepository.GetFavouriteByUserIds(favouriteDto.UserId, favouriteDto.MemberId);
         if (favourite != null)
@@ -51,6 +73,7 @@ public class UsersController : ControllerBase
         }
         return Ok();
     }
+
 
     [HttpPost]
     [Route("favourite")]
@@ -75,4 +98,21 @@ public class UsersController : ControllerBase
     //getfavourites
     //create event
     //list events
+
+    [HttpGet]
+    [Route("interests/{userId:int}")]
+    public async Task<IActionResult> GetInterests(int userId)
+    {
+        var user = await _unitOfWork.MemberInterestRepository
+            .Get(x => x.MemberId == userId, includeProperties: "Interest,Member");
+
+        var userInterests = user.Select(x => new
+        {
+            Name = x.Interest.Name,
+            Id = x.Interest.Id,
+            UserId = x.MemberId
+        });
+        return Ok(userInterests);
+    }
+
 }

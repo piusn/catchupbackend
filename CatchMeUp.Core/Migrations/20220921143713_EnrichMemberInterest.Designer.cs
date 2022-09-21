@@ -4,6 +4,7 @@ using CatchMeUp.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatchMeUp.Core.Migrations
 {
     [DbContext(typeof(CatchMeUpDbContext))]
-    partial class CatchMeUpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220921143713_EnrichMemberInterest")]
+    partial class EnrichMemberInterest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,11 +24,7 @@ namespace CatchMeUp.Core.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-
-            modelBuilder.Entity("CatchMeUp.Core.Entities.Favourite", b =>
-
             modelBuilder.Entity("CatchMeUp.Core.Entities.Availability", b =>
-
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,19 +32,10 @@ namespace CatchMeUp.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("FavoritedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UnFavoritedOn")
-
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("StartTime")
-
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
@@ -54,9 +43,7 @@ namespace CatchMeUp.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Favourites");
                     b.ToTable("MemberAvailability");
-
                 });
 
             modelBuilder.Entity("CatchMeUp.Core.Entities.Following", b =>

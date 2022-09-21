@@ -5,7 +5,8 @@
         public int UserId { get; set; }
 
         public string AvailabilityStatus { get; set; }
-        public DateTime When { get; set; }
-        public int Activity { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public int ActivityId { get; set; }
     }
 }
