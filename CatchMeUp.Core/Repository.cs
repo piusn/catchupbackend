@@ -9,7 +9,7 @@ public interface IRepository<T>
     Task Delete(T entityToDelete);
     Task Insert(T entity);
     Task Update(T entityToUpdate);
-    T GetByID(object id);
+    Task<T> GetByID(int id);
 }
 
 public class Repository<T> : IRepository<T> where T : class
@@ -48,30 +48,31 @@ public class Repository<T> : IRepository<T> where T : class
         }
     }
 
-    public virtual async Task Delete(T entityToDelete)
+    public virtual Task Delete(T entityToDelete)
     {
         if (dbContext.Entry(entityToDelete).State == EntityState.Detached)
         {
             dbSet.Attach(entityToDelete);
         }
         dbSet.Remove(entityToDelete);
-        await dbContext.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 
-    public virtual T GetByID(object id)
+    public virtual async Task<T> GetByID(int id)
     {
-        return dbSet.Find(id);
+        return await dbSet.FindAsync(id);
     }
-    public virtual async Task Insert(T entity)
+
+    public virtual Task Insert(T entity)
     {
         dbSet.Add(entity);
-        await dbContext.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 
-    public virtual async Task Update(T entityToUpdate)
+    public virtual Task Update(T entityToUpdate)
     {
         dbSet.Attach(entityToUpdate);
         dbContext.Entry(entityToUpdate).State = EntityState.Modified;
-        await dbContext.SaveChangesAsync();
+        return Task.CompletedTask;
     }
 }

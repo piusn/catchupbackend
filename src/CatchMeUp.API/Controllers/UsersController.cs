@@ -22,6 +22,9 @@ public class UsersController : ControllerBase
     [Route("follow")]
     public async Task<IActionResult> Follow(FollowDto followDto)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         var follow = _mapper.Map<Following>(followDto);
         await _unitOfWork.FollowingsRepository.Insert(follow);
         await _unitOfWork.Save();
@@ -35,20 +38,16 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> SetAvailability(AvailabilityDto availabilityDto)
     {
         var user = _unitOfWork.MemberRepository.GetByID(availabilityDto.UserId);
-
-        user.Available = true;
         await _unitOfWork.Save();
         return Ok();
     }
 
     [HttpPost]
     [Route("unfavourite")]
-    public async Task<IActionResult> UnFavourite(FavouriteDto favouriteDto)
+    public async Task<IActionResult> UnFavourite([FromBody] FavouriteDto favouriteDto)
     {
         return Ok();
     }
 
-    //getfavourites
-    //create event
-    //list events
+
 }
