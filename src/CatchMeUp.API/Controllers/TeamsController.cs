@@ -22,11 +22,12 @@ public class TeamsController : ControllerBase
     [Route("createevent")]
     public async Task<IActionResult> CreateTeamEvent([FromBody] TeamEventDto teamEventDto)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         var teamEvent = _mapper.Map<TeamEvent>(teamEventDto);
         await _unitOfWork.TeamEventRepository.Insert(teamEvent);
+        await _unitOfWork.Save();
         return Ok();
     }
 

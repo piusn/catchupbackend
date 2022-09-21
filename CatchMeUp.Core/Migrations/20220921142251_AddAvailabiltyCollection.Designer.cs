@@ -4,6 +4,7 @@ using CatchMeUp.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatchMeUp.Core.Migrations
 {
     [DbContext(typeof(CatchMeUpDbContext))]
-    partial class CatchMeUpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220921142251_AddAvailabiltyCollection")]
+    partial class AddAvailabiltyCollection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

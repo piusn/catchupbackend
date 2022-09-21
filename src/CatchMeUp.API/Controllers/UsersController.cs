@@ -37,8 +37,27 @@ public class UsersController : ControllerBase
     [Route("setavailability")]
     public async Task<IActionResult> SetAvailability(AvailabilityDto availabilityDto)
     {
-        var user = _unitOfWork.MemberRepository.GetByID(availabilityDto.UserId);
+        var user = await _unitOfWork.MemberRepository.GetByID(availabilityDto.UserId);
+        if (user == null)
+            return NotFound($"The user with id {availabilityDto.UserId} is not found");
+
+        user.Available = availabilityDto.AvailabilityStatus == "true";
+        await _unitOfWork.AvailabilityRepository.Insert(new Availability()
+        {
+            StartTime = availabilityDto.StartTime,
+            EndTime = availabilityDto.EndTime,
+            MemberInterests = new List<MemberInterest>()
+            {
+                new MemberInterest() {
+                    Id = availabilityDto.ActivityId,
+                    MemberId = availabilityDto.UserId
+
+                }
+            }
+        });
+
         await _unitOfWork.Save();
+
         return Ok();
     }
 
@@ -49,5 +68,9 @@ public class UsersController : ControllerBase
         return Ok();
     }
 
+    public async Task<IActionResult> GetInterests(int userId)
+    {
+        return Ok();
+    }
 
 }

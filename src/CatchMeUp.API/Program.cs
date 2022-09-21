@@ -1,6 +1,8 @@
 using CatchMeUp.API;
+using CatchMeUp.API.Extensions;
 using CatchMeUp.Core;
 using CatchMeUp.Core.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +18,10 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 var app = builder.Build();
-
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme =  JwtBearerDefaults.AuthenticationScheme;
+}).AddAzureAdBearer(options => builder.Configuration.Bind("AzureAd", options));
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{

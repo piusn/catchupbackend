@@ -24,6 +24,7 @@ namespace CatchMeUp.Core
         public DbSet<Team> Teams { get; set; }
         public DbSet<TeamEvent> TeamEvents { get; set; }
         public DbSet<MemberInterest> MemberInterests { get; set; }
+        public DbSet<Availability> MemberAvailability { get; set; }
 
     }
 }

@@ -9,7 +9,7 @@ public interface IUnitOfWork
     IRepository<MemberInterest> MemberInterestRepository { get; }
     IRepository<Team> TeamRepository { get; }
     IRepository<TeamEvent> TeamEventRepository { get; }
-
+    IRepository<Availability> AvailabilityRepository { get; }
     Task Save();
 }
 
@@ -18,7 +18,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly CatchMeUpDbContext _dbContext;
 
     public UnitOfWork(CatchMeUpDbContext dbContext, IRepository<User> memberRepository,
-        IRepository<Interest> interestRepository, IRepository<Following> followingsRepository, IRepository<MemberInterest> memberInterestRepository, IRepository<TeamEvent> teamEventRepository, IRepository<Team> teamRepository)
+        IRepository<Interest> interestRepository, IRepository<Following> followingsRepository, IRepository<MemberInterest> memberInterestRepository, IRepository<TeamEvent> teamEventRepository, IRepository<Team> teamRepository, IRepository<Availability> availabilityRepository)
     {
         _dbContext = dbContext;
         MemberRepository = memberRepository;
@@ -27,6 +27,7 @@ public class UnitOfWork : IUnitOfWork
         MemberInterestRepository = memberInterestRepository;
         TeamEventRepository = teamEventRepository;
         TeamRepository = teamRepository;
+        AvailabilityRepository = availabilityRepository;
     }
 
     public IRepository<User> MemberRepository { get; }
@@ -35,6 +36,7 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<MemberInterest> MemberInterestRepository { get; }
     public IRepository<Team> TeamRepository { get; }
     public IRepository<TeamEvent> TeamEventRepository { get; }
+    public IRepository<Availability> AvailabilityRepository { get; }
 
     public async Task Save()
     {
