@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using CatchMeUp.API.Dto;
 using CatchMeUp.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatchMeUp.API.Controllers;
 
 [Route("api/manage")]
 [ApiController]
+//[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IMapper _mapper;
@@ -87,8 +89,13 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     [Route("favourites/{userId?}")]
+    [Authorize]
     public async Task<List<MemberDto>> GetFavourites(int userId)
     {
+        var user = HttpContext.User.Identity.Name;
+
+        var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sid")?.Value;
+
         var favourites = await _unitOfWork.FavouriteRepository.Get(x => x.UserId == userId);
         var ids = favourites.Select(x => x.MemberId).ToList();
         var members = await _unitOfWork.MemberRepository.Get(x => ids.Contains(x.Id));

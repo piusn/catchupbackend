@@ -40,7 +40,7 @@ namespace CatchMeUp.Core.Migrations
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UnFavoritedOn")
+                    b.Property<DateTime?>("UnFavoritedOn");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -57,7 +57,7 @@ namespace CatchMeUp.Core.Migrations
                     b.ToTable("Favourites");
                     b.ToTable("MemberAvailability");
 
-                });
+                }));
 
             modelBuilder.Entity("CatchMeUp.Core.Entities.Following", b =>
                 {
