@@ -25,7 +25,9 @@ public class UsersController : ControllerBase
         var follow = _mapper.Map<Following>(followDto);
         await _unitOfWork.FollowingsRepository.Insert(follow);
         await _unitOfWork.Save();
-        return Ok();
+
+        followDto = _mapper.Map<FollowDto>(follow);
+        return Ok(followDto);
     }
 
     [HttpPost]
