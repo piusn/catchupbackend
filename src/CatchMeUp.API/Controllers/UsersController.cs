@@ -43,9 +43,12 @@ public class UsersController : ControllerBase
     [Route("unfavourite")]
     public async Task<IActionResult> UnFavourite(FavouriteDto favouriteDto)
     {
-        var favourite = _mapper.Map<Favourite>(favouriteDto);
-        await _unitOfWork.FavouriteRepository.Delete(favourite);
-        await _unitOfWork.Save();
+        var favourite = await _unitOfWork.FavouriteRepository.GetFavouriteByUserIds(favouriteDto.UserId, favouriteDto.MemberId);
+        if (favourite != null)
+        {
+            await _unitOfWork.FavouriteRepository.Delete(favourite);
+            await _unitOfWork.Save();
+        }
         return Ok();
     }
 
@@ -64,7 +67,8 @@ public class UsersController : ControllerBase
     public async Task<List<MemberDto>> GetFavourites(int userId)
     {
         var favourites = await _unitOfWork.FavouriteRepository.Get(x => x.UserId == userId);
-        var members = await _unitOfWork.MemberRepository.Get(x => favourites.Select(y => y.MemberId).Equals(x.Id));
+        var ids = favourites.Select(x => x.MemberId).ToList();
+        var members = await _unitOfWork.MemberRepository.Get(x => ids.Contains(x.Id));
         return _mapper.Map<List<MemberDto>>(members);
     }
 

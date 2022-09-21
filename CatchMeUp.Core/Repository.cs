@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CatchMeUp.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace CatchMeUp.Core;
@@ -10,6 +11,7 @@ public interface IRepository<T>
     Task Insert(T entity);
     Task Update(T entityToUpdate);
     T GetByID(object id);
+    Task<Favourite?> GetFavouriteByUserIds(int userId, int memberId);
 }
 
 public class Repository<T> : IRepository<T> where T : class
@@ -73,5 +75,10 @@ public class Repository<T> : IRepository<T> where T : class
         dbSet.Attach(entityToUpdate);
         dbContext.Entry(entityToUpdate).State = EntityState.Modified;
         await dbContext.SaveChangesAsync();
+    }
+
+    public Task<Favourite?> GetFavouriteByUserIds(int userId, int memberId)
+    {
+        return Task.FromResult(dbContext.Favourites.Where(p => p.UserId.Equals(userId) && p.MemberId.Equals(memberId)).FirstOrDefault());
     }
 }

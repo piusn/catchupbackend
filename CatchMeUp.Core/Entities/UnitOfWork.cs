@@ -12,12 +12,12 @@ public interface IUnitOfWork
     Task Save();
 }
 
-public class UnitOfWork :IUnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
     private readonly CatchMeUpDbContext _dbContext;
 
     public UnitOfWork(CatchMeUpDbContext dbContext, IRepository<Member> memberRepository,
-        IRepository<Interest> interestRepository, IRepository<Following> followingsRepository, IRepository<MemberInterest> memberInterestRepository , IRepository<Favourite> favouriteRepository)
+        IRepository<Interest> interestRepository, IRepository<Following> followingsRepository, IRepository<MemberInterest> memberInterestRepository, IRepository<Favourite> favouriteRepository)
     {
         _dbContext = dbContext;
         MemberRepository = memberRepository;
