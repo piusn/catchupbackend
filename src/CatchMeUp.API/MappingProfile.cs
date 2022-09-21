@@ -11,5 +11,6 @@ public class MappingProfile : Profile
         CreateMap<MemberDto, Member>().ReverseMap();
         CreateMap<MemberInterestDto, MemberInterest>().ReverseMap();
         CreateMap<InterestDto, Interest>().ReverseMap();
+        CreateMap<FavouriteDto, Favourite>().ReverseMap();
     }
 }

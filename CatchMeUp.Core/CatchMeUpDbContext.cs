@@ -21,5 +21,6 @@ namespace CatchMeUp.Core
         public DbSet<Member> Members { get; set; }
         public DbSet<Following> Followers { get; set; }
         public DbSet<Interest> Interests { get; set; }
+        public DbSet<Favourite> Favourites { get; set; }
     }
 }

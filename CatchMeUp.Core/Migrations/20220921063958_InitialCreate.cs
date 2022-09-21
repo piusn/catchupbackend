@@ -1,4 +1,5 @@
 ﻿using System;
+using CatchMeUp.Core.Entities;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -52,6 +53,38 @@ namespace CatchMeUp.Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Members", x => x.Id);
+                });
+                        migrationBuilder.CreateTable(
+                name: "Members",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    Available = table.Column<bool>(type: "bit", nullable: false),
+                    OfficeStatus = table.Column<bool>(type: "bit", nullable: false),
+                    MemberType = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Members", x => x.Id);
+                });
+            
+            migrationBuilder.CreateTable(
+                name: "Favourites",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "int", nullable: false),
+                    MemberId = table.Column<string>(type: "int", nullable: false),
+                    FavoritedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UnFavoritedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Favourites", x => x.Id);
                 });
         }
 
