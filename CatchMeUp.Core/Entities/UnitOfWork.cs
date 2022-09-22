@@ -6,14 +6,14 @@ public interface IUnitOfWork
     IRepository<Interest> InterestRepository { get; }
 
     IRepository<Following> FollowingsRepository { get; }
-    IRepository<MemberInterest> MemberInterestRepository { get; }
+    IRepository<UserInterest> MemberInterestRepository { get; }
 
     IRepository<Favourite> FavouriteRepository { get; }
 
 
     IRepository<Team> TeamRepository { get; }
     IRepository<TeamEvent> TeamEventRepository { get; }
-    IRepository<Availability> AvailabilityRepository { get; }
+    IRepository<UserAvailability> AvailabilityRepository { get; }
 
     Task Save();
 }
@@ -23,7 +23,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly CatchMeUpDbContext _dbContext;
 
     public UnitOfWork(CatchMeUpDbContext dbContext, IRepository<User> memberRepository,IRepository<Favourite> favouriteRepository,
-        IRepository<Interest> interestRepository, IRepository<Following> followingsRepository, IRepository<MemberInterest> memberInterestRepository, IRepository<TeamEvent> teamEventRepository, IRepository<Team> teamRepository, IRepository<Availability> availabilityRepository)
+        IRepository<Interest> interestRepository, IRepository<Following> followingsRepository, IRepository<UserInterest> memberInterestRepository, IRepository<TeamEvent> teamEventRepository, IRepository<Team> teamRepository, IRepository<UserAvailability> availabilityRepository)
     {
         _dbContext = dbContext;
         MemberRepository = memberRepository;
@@ -42,11 +42,11 @@ public class UnitOfWork : IUnitOfWork
     public IRepository<User> MemberRepository { get; }
     public IRepository<Interest> InterestRepository { get; }
     public IRepository<Following> FollowingsRepository { get; }
-    public IRepository<MemberInterest> MemberInterestRepository { get; }
+    public IRepository<UserInterest> MemberInterestRepository { get; }
     public IRepository<Favourite> FavouriteRepository { get; }
     public IRepository<Team> TeamRepository { get; }
     public IRepository<TeamEvent> TeamEventRepository { get; }
-    public IRepository<Availability> AvailabilityRepository { get; }
+    public IRepository<UserAvailability> AvailabilityRepository { get; }
 
     public async Task Save()
     {

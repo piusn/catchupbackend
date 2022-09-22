@@ -1,6 +1,6 @@
 ﻿namespace CatchMeUp.Core.Entities;
 
-public class MemberInterest : BaseEntity
+public class UserInterest : BaseEntity
 {
     public int InterestId { get; set; }
 

@@ -45,14 +45,14 @@ public class UsersController : ControllerBase
             return NotFound($"The user with id {availabilityDto.UserId} is not found");
 
         user.Available = availabilityDto.AvailabilityStatus == "true";
-        await _unitOfWork.AvailabilityRepository.Insert(new Availability()
+        await _unitOfWork.AvailabilityRepository.Insert(new UserAvailability()
         {
             StartTime = availabilityDto.StartTime,
             EndTime = availabilityDto.EndTime,
-            MemberInterests = new List<MemberInterest>()
+            UserInterests = new List<UserInterest>()
             {
-                new MemberInterest() {
-                    InterestId = availabilityDto.ActivityId,
+                new UserInterest() {
+                    InterestId = availabilityDto.InterestId,
                     MemberId = availabilityDto.UserId
                 }
             }
@@ -92,9 +92,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<List<MemberDto>> GetFavourites(int userId)
     {
-        var user = HttpContext.User.Identity.Name;
-
-        var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sid")?.Value;
+       
 
         var favourites = await _unitOfWork.FavouriteRepository.Get(x => x.UserId == userId);
         var ids = favourites.Select(x => x.MemberId).ToList();
