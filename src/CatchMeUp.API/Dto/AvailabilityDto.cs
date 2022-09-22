@@ -7,6 +7,6 @@
         public string AvailabilityStatus { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public int ActivityId { get; set; }
+        public int InterestId { get; set; }
     }
 }

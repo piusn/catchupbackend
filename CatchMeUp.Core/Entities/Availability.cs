@@ -1,13 +1,13 @@
 ﻿namespace CatchMeUp.Core.Entities;
 
-public class Availability : BaseEntity
+public class UserAvailability : BaseEntity
 {
-    public Availability()
+    public UserAvailability()
     {
-        MemberInterests = new List<MemberInterest>();
+        UserInterests = new List<UserInterest>();
     }
     public int UserId { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
-    public virtual List<MemberInterest> MemberInterests { get; set; }
+    public virtual List<UserInterest> UserInterests { get; set; }
 }

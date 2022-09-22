@@ -22,11 +22,7 @@ namespace CatchMeUp.Core.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-
             modelBuilder.Entity("CatchMeUp.Core.Entities.Favourite", b =>
-
-            modelBuilder.Entity("CatchMeUp.Core.Entities.Availability", b =>
-
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,13 +36,7 @@ namespace CatchMeUp.Core.Migrations
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UnFavoritedOn");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartTime")
-
+                    b.Property<DateTime?>("UnFavoritedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
@@ -55,9 +45,7 @@ namespace CatchMeUp.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Favourites");
-                    b.ToTable("MemberAvailability");
-
-                }));
+                });
 
             modelBuilder.Entity("CatchMeUp.Core.Entities.Following", b =>
                 {
@@ -99,34 +87,6 @@ namespace CatchMeUp.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Interests");
-                });
-
-            modelBuilder.Entity("CatchMeUp.Core.Entities.MemberInterest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("AvailabilityId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InterestId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MemberId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AvailabilityId");
-
-                    b.HasIndex("InterestId");
-
-                    b.HasIndex("MemberId");
-
-                    b.ToTable("MemberInterests");
                 });
 
             modelBuilder.Entity("CatchMeUp.Core.Entities.Team", b =>
@@ -202,34 +162,69 @@ namespace CatchMeUp.Core.Migrations
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Members");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CatchMeUp.Core.Entities.MemberInterest", b =>
+            modelBuilder.Entity("CatchMeUp.Core.Entities.UserAvailability", b =>
                 {
-                    b.HasOne("CatchMeUp.Core.Entities.Availability", null)
-                        .WithMany("MemberInterests")
-                        .HasForeignKey("AvailabilityId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasOne("CatchMeUp.Core.Entities.Interest", "Interest")
-                        .WithMany()
-                        .HasForeignKey("InterestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.HasOne("CatchMeUp.Core.Entities.User", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
 
-                    b.Navigation("Interest");
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
-                    b.Navigation("Member");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserAvailability");
+                });
+
+            modelBuilder.Entity("CatchMeUp.Core.Entities.UserInterest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("InterestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserAvailabilityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InterestId");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("UserAvailabilityId");
+
+                    b.ToTable("UserInterests");
                 });
 
             modelBuilder.Entity("CatchMeUp.Core.Entities.TeamEvent", b =>
@@ -252,9 +247,27 @@ namespace CatchMeUp.Core.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CatchMeUp.Core.Entities.Availability", b =>
+            modelBuilder.Entity("CatchMeUp.Core.Entities.UserInterest", b =>
                 {
-                    b.Navigation("MemberInterests");
+                    b.HasOne("CatchMeUp.Core.Entities.Interest", "Interest")
+                        .WithMany()
+                        .HasForeignKey("InterestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CatchMeUp.Core.Entities.User", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CatchMeUp.Core.Entities.UserAvailability", null)
+                        .WithMany("UserInterests")
+                        .HasForeignKey("UserAvailabilityId");
+
+                    b.Navigation("Interest");
+
+                    b.Navigation("Member");
                 });
 
             modelBuilder.Entity("CatchMeUp.Core.Entities.Team", b =>
@@ -262,6 +275,11 @@ namespace CatchMeUp.Core.Migrations
                     b.Navigation("Events");
 
                     b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("CatchMeUp.Core.Entities.UserAvailability", b =>
+                {
+                    b.Navigation("UserInterests");
                 });
 #pragma warning restore 612, 618
         }

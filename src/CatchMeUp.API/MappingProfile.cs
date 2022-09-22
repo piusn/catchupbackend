@@ -9,11 +9,11 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<MemberDto, User>().ReverseMap();
-        CreateMap<MemberInterestDto, MemberInterest>().ReverseMap();
+        CreateMap<MemberInterestDto, UserInterest>().ReverseMap();
         CreateMap<InterestDto, Interest>().ReverseMap();
         CreateMap<FavouriteDto, Favourite>().ReverseMap();
         CreateMap<TeamDto, Team>().ReverseMap();
         CreateMap<TeamEvent, TeamEventDto>().ReverseMap();
-        CreateMap<MemberInterest, MemberInterestDto>().ReverseMap();
+        CreateMap<UserInterest, MemberInterestDto>().ReverseMap();
     }
 }
