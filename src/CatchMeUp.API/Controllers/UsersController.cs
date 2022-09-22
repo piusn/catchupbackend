@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CatchMeUp.API.Dto;
+using CatchMeUp.API.Extensions;
 using CatchMeUp.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,14 +38,12 @@ public class UsersController : ControllerBase
 
     [HttpPost]
     [Route("setavailability")]
+    [Authorize]
     public async Task<IActionResult> SetAvailability(AvailabilityDto availabilityDto)
     {
-        var user = await _unitOfWork.MemberRepository.GetByID(availabilityDto.UserId);
+        var user = (await _unitOfWork.UserRepository.Get(x => x.UserId == HttpContext.UserId())).First();
 
-        if (user == null)
-            return NotFound($"The user with id {availabilityDto.UserId} is not found");
-
-        user.Available = availabilityDto.AvailabilityStatus == "true";
+        //user.Available = availabilityDto.AvailabilityStatus == "true";
         await _unitOfWork.AvailabilityRepository.Insert(new UserAvailability()
         {
             StartTime = availabilityDto.StartTime,
@@ -53,7 +52,7 @@ public class UsersController : ControllerBase
             {
                 new UserInterest() {
                     InterestId = availabilityDto.InterestId,
-                    MemberId = availabilityDto.UserId
+                    MemberId = user.Id
                 }
             }
         });
@@ -62,6 +61,31 @@ public class UsersController : ControllerBase
 
         return Ok();
     }
+    // Add interests
+
+    // get interests
+    [HttpGet]
+    [Route("interests")]
+    [Authorize]
+    public async Task<IActionResult> GetInterests()
+    {
+        var user = (await _unitOfWork.UserRepository.Get(x => x.UserId == HttpContext.UserId())).FirstOrDefault();
+        var interests = await _unitOfWork.UserInterestRepository.Get(x => x.MemberId == user.Id, includeProperties: "Interest");
+        return Ok(interests);
+    }
+
+    // get availabilities (my)
+    [HttpGet]
+    [Route("availability")]
+    [Authorize]
+    public async Task<IActionResult> GetAvailabilities()
+    {
+        var user = (await _unitOfWork.UserRepository.Get(x => x.UserId == HttpContext.UserId())).FirstOrDefault();
+        var availabilities = await _unitOfWork.AvailabilityRepository.Get(x => x.UserId == user.Id, includeProperties: "UserInterests");
+        return Ok(availabilities);
+    }
+
+    // get available availabilities(person, available, interest)
 
     [HttpPost]
     [Route("unfavourite")]
@@ -92,23 +116,17 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<List<MemberDto>> GetFavourites(int userId)
     {
-       
-
         var favourites = await _unitOfWork.FavouriteRepository.Get(x => x.UserId == userId);
         var ids = favourites.Select(x => x.MemberId).ToList();
-        var members = await _unitOfWork.MemberRepository.Get(x => ids.Contains(x.Id));
+        var members = await _unitOfWork.UserRepository.Get(x => ids.Contains(x.Id));
         return _mapper.Map<List<MemberDto>>(members);
     }
-
-    //getfavourites
-    //create event
-    //list events
 
     [HttpGet]
     [Route("interests/{userId:int}")]
     public async Task<IActionResult> GetInterests(int userId)
     {
-        var user = await _unitOfWork.MemberInterestRepository
+        var user = await _unitOfWork.UserInterestRepository
             .Get(x => x.MemberId == userId, includeProperties: "Interest,Member");
 
         var userInterests = user.Select(x => new
