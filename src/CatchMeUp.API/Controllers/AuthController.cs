@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CatchMeUp.API.Dto;
 using CatchMeUp.Core.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatchMeUp.API.Controllers;
@@ -19,22 +18,18 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("register")]
-    [Authorize]
-    public async Task<IActionResult> Register(MemberDto memberDto)
+    //[Authorize]
+    public async Task<IActionResult> Register(UserDto userDto)
     {
-        var userFullName = HttpContext.User.Identity?.Name;
-        var preferredUserName = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "preferred_username")?.Value;
-        var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sid")?.Value;
-
-        var persistedUser = await _unitOfWork.UserRepository.Get(x => x.UserId == userIdFromToken);
+        var persistedUser = await _unitOfWork.UserRepository.Get(x => x.UserId == userDto.UserId);
         if (!persistedUser.Any())
         {
             var newUser = new User()
             {
-                UserId = userIdFromToken,
-                Name = userFullName,
-                UserName = preferredUserName,
-                TeamId = memberDto.TeamId
+                UserId = userDto.UserId,
+                Name = userDto.FullName,
+                UserName = userDto.UserName,
+                TeamId = userDto.TeamId
             };
             await _unitOfWork.UserRepository.Insert(newUser);
             await _unitOfWork.Save();

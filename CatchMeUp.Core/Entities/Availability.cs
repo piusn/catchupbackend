@@ -8,6 +8,8 @@ public class UserAvailability : BaseEntity
     }
 
     public int UserId { get; set; }
+    public virtual User User { get; set; }
+
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public virtual List<UserInterest> UserInterests { get; set; }

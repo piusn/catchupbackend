@@ -1,12 +1,9 @@
-﻿using CatchMeUp.Core.Entities;
+﻿namespace CatchMeUp.API.Dto;
 
-namespace CatchMeUp.API.Dto
+public class UserDto
 {
-    public class MemberDto
-    {
-        public bool Status { get; set; }
-        public bool Available { get; set; }
-        public bool OfficeStatus { get; set; }
-        public int  TeamId { get; set; }
-    }
+    public int TeamId { get; set; }
+    public string UserName { get; set; }
+    public string FullName { get; set; }
+    public string UserId { get; set; }
 }
