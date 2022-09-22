@@ -42,11 +42,4 @@ public class AuthController : ControllerBase
 
         return Ok();
     }
-
-    [HttpPost]
-    [Route("login")]
-    public async Task<IActionResult> Login()
-    {
-        return Ok();
-    }
 }
