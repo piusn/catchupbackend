@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
         var preferredUserName = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "preferred_username")?.Value;
         var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sid")?.Value;
 
-        var persistedUser = await _unitOfWork.MemberRepository.Get(x => x.UserId == userIdFromToken);
+        var persistedUser = await _unitOfWork.UserRepository.Get(x => x.UserId == userIdFromToken);
         if (!persistedUser.Any())
         {
             var newUser = new User()
@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
                 UserName = preferredUserName,
                 TeamId = memberDto.TeamId
             };
-            await _unitOfWork.MemberRepository.Insert(newUser);
+            await _unitOfWork.UserRepository.Insert(newUser);
             await _unitOfWork.Save();
         }
 
