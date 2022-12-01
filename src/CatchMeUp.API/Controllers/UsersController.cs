@@ -5,6 +5,7 @@ using CatchMeUp.API.Responses;
 using CatchMeUp.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CatchMeUp.API.Controllers;
 
@@ -64,8 +65,9 @@ public class UsersController : ControllerBase
         return Ok();
     }
     // get interests
-    [HttpGet]
-    [Route("interests/{userId}")]
+    [HttpGet("users/{userId}/interests")]
+    //[Route("users/{userId}/interests")]
+    [SwaggerOperation("GetInterests")]
     //[Authorize]
     public async Task<IActionResult> GetInterests(string userId)
     {
@@ -75,8 +77,9 @@ public class UsersController : ControllerBase
     }
 
     // get availabilities (my)
-    [HttpGet]
-    [Route("availability/{userId}")]
+   // [HttpGet("GetAvailabilities")]
+    [HttpGet("users/{userId}/availability")]
+    [SwaggerOperation("GetAvailabilities")]
     //[Authorize]
     public async Task<IActionResult> GetAvailabilities(string userId)
     {
